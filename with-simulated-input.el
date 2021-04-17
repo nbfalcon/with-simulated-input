@@ -179,7 +179,7 @@ in `progn'."
                               def-body)))
   (pcase keys
     (`(quote ,x) (setq keys x)))
-  (unless (listp keys)
+  (when (or (not (listp keys)) (symbolp (car keys)) (eq (car-safe (car keys)) 'lambda))
     (cl-callf list keys))
   `(with-simulated-input-1
     (lambda ()
