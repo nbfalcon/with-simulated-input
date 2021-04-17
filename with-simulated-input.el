@@ -173,12 +173,14 @@ are propagated normally.
 
 The return value is the last form in BODY, as if it was wrapped
 in `progn'."
-  (declare (indent 1) (debug ([&or ("quote" (&rest &or stringp def-form))
+  (declare (indent 1) (debug ([&or ("quote" [&or (&rest &or stringp def-form)
+                                                 stringp])
                                    (&rest &or stringp def-form)]
                               def-body)))
   (pcase keys
-    (`(quote ,x) (setq keys x))
-    ((guard (not (listp keys))) (cl-callf list keys)))
+    (`(quote ,x) (setq keys x)))
+  (unless (listp keys)
+    (cl-callf list keys))
   `(with-simulated-input-1
     (lambda ()
       ,@body)
